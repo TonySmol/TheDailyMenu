@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🍽️ Меню-Генератор</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --danger: #FF4757;
+            --success: #4CAF50;
+            --bg-light: #f5f5f5;
+            --text-dark: #333;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --spacing: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: var(--spacing);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary);
+            padding: var(--spacing);
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"], 
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            margin: 6px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button.danger {
+            background: var(--danger);
+        }
+
+        button.success {
+            background: var(--success);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        ul {
+            list-style: none;
+            padding: var(--spacing);
+            margin: 0;
+        }
+
+        li {
+            margin: 6px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            font-size: 0.9rem;
+        }
+
+        .ingredient-group {
+            display: flex;
+            gap: 8px;
+            margin: 4px 0;
+            flex-wrap: wrap;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+
+        .weight-info {
+            font-size: 0.7em;
+            color: #666;
+            margin-left: 8px;
+        }
+
+        .badge {
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions-row button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                margin: 0 auto;
+                width: calc(100% - 16px);
+            }
+
+            h1, h2 {
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+
+            input[type="text"], 
+            input[type="number"] {
+                padding: 6px 10px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+
+            li {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+
+            .ingredient-group {
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Главное меню -->
+        <div id="main-menu">
+            <h1>🍽️ Меню-Генератор</h1>
+            <button onclick="showDishes()">Список блюд</button>
+            <button onclick="showGenerateMenu()">Генерировать меню</button>
+        </div>
+
+        <!-- Форма добавления/редактирования -->
+        <div id="add-dish" class="hidden">
+            <h2 id="form-title">Добавить новое блюдо</h2>
+            <input type="text" id="dish-name" placeholder="Название блюда" required>
+            <div id="ingredients-container"></div>
+            <button onclick="addIngredientField()">+ Добавить ингредиент</button>
+            <button onclick="saveCurrentDish()" id="save-button">Сохранить блюдо</button>
+            <button onclick="cancelEdit()" class="danger">Отмена</button>
+        </div>
+
+        <!-- Список блюд -->
+        <div id="dishes-view" class="hidden">
+            <h2>Блюда</h2>
+            <ul id="dishes-list"></ul>
+            <button onclick="showAddDish()">Добавить новое блюдо</button>
+            <button onclick="showMainMenu()">Назад</button>
+        </div>
+
+        <!-- Генерация меню -->
+        <div id="generate-menu" class="hidden">
+            <h2>Сгенерировать меню</h2>
+            <div class="ingredient-group">
+                <label for="menu-count">Количество блюд:</label>
+                <input type="number" id="menu-count" min="1" value="3">
+            </div>
+            <button onclick="startGeneration()">Сгенерировать</button>
+            <ul id="selected-list"></ul>
+            <button onclick="showShoppingList()">Создать список покупок</button>
+            <button onclick="backToGenerateMenu()" class="danger">Изменить количество</button>
+        </div>
+
+        <!-- Список покупок -->
+        <div id="shopping-list" class="hidden">
+            <h2>🛒 Список покупок</h2>
+            <ul id="shopping-output"></ul>
+            <div class="ingredient-group actions-row">
+                <button onclick="downloadShoppingList()" class="success">Скачать</button>
+                <button onclick="copyShoppingList()">Копировать</button>
+            </div>
+            <button onclick="backToGeneratedMenu()" class="danger">Назад</button>
+        </div>
+    </div>
+
+    <script>
+        let dishes = JSON.parse(localStorage.getItem('dishes') || '[]');
+        let selectedDishes = [];
+        let currentEditIndex = null;
+
+        // Сохранение данных
+        function saveData() {
+            localStorage.setItem('dishes', JSON.stringify(dishes));
+        }
+
+        // Переключатель представлений
+        function switchView(viewId) {
+            document.querySelectorAll('.container > div').forEach(div => {
+                div.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        // Главное меню
+        function showMainMenu() {
+            switchView('main-menu');
+        }
+
+        // Список блюд
+        function showDishes() {
+            renderDishes();
+            switchView('dishes-view');
+        }
+
+        // Добавление поля ингредиента
+        function addIngredientField(product = '', amount = '') {
+            const container = document.getElementById('ingredients-container');
+            const group = document.createElement('div');
+            group.className = 'ingredient-group';
+            
+            const productInput = document.createElement('input');
+            productInput.type = 'text';
+            productInput.placeholder = 'Продукт (например: морковь)';
+            productInput.value = product;
+            productInput.required = true;
+
+            const amountInput = document.createElement('input');
+            amountInput.type = 'text';
+            amountInput.placeholder = 'Количество (например: 2 шт)';
+            amountInput.value = amount;
+            amountInput.required = true;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.className = 'danger';
+            removeBtn.onclick = () => {
+                if (confirm('Удалить этот ингредиент?')) {
+                    container.removeChild(group);
+                }
+            };
+
+            group.appendChild(productInput);
+            group.appendChild(amountInput);
+            group.appendChild(removeBtn);
+            container.appendChild(group);
+        }
+
+        // Открытие формы добавления
+        function showAddDish(index = null) {
+            currentEditIndex = index;
+            document.getElementById('form-title').textContent = 
+                index !== null ? 'Редактировать блюдо' : 'Добавить новое блюдо';
+            document.getElementById('save-button').textContent = 
+                index !== null ? 'Обновить блюдо' : 'Сохранить блюдо';
+
+            const container = document.getElementById('ingredients-container');
+            container.innerHTML = '';
+
+            if (index !== null) {
+                const dish = dishes[index];
+                document.getElementById('dish-name').value = dish.name;
+                dish.ingredients.forEach(ing => addIngredientField(ing.product, ing.amount));
+            } else {
+                document.getElementById('dish-name').value = '';
+                addIngredientField();
+            }
+
+            switchView('add-dish');
+        }
+
+        // Валидация перед сохранением
+        function validateForm() {
+            const name = document.getElementById('dish-name').value.trim();
+            if (!name) {
+                showMessage('Ошибка!', 'Введите название блюда!', 'error');
+                return false;
+            }
+
+            const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-group'));
+            if (ingredients.length === 0) {
+                showMessage('Ошибка!', 'Добавьте хотя бы один ингредиент!', 'error');
+                return false;
+            }
+
+            for (const group of ingredients) {
+                const inputs = group.querySelectorAll('input');
+                if (!inputs[0].value.trim() || !inputs[1].value.trim()) {
+                    showMessage('Ошибка!', 'Заполните все поля ингредиентов!', 'error');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Сохранение/обновление блюда
+        function saveCurrentDish() {
+            if (!validateForm()) return;
+
+            const name = document.getElementById('dish-name').value.trim();
+            
+            const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-group')).map(group => {
+                const inputs = group.querySelectorAll('input');
+                return {
+                    product: inputs[0].value.trim(),
+                    amount: inputs[1].value.trim()
+                };
+            });
+
+            if (currentEditIndex === null) {
+                dishes.push({
+                    id: Date.now(),
+                    name,
+                    ingredients,
+                    weight: 0
+                });
+            } else {
+                dishes[currentEditIndex] = {
+                    ...dishes[currentEditIndex],
+                    name,
+                    ingredients
+                };
+            }
+
+            saveData();
+            showDishes();
+            showMessage('Успех!', currentEditIndex === null ? 'Блюдо добавлено!' : 'Блюдо обновлено!', 'success');
+        }
+
+        // Отмена редактирования
+        function cancelEdit() {
+            if (confirm('Вы уверены, что хотите отменить изменения?')) {
+                currentEditIndex = null;
+                showDishes();
+            }
+        }
+
+        // Рендеринг списка блюд
+        function renderDishes() {
+            const list = document.getElementById('dishes-list');
+            list.innerHTML = '';
+            
+            if (dishes.length === 0) {
+                list.innerHTML = '<p class="center">Нет добавленных блюд</p>';
+                return;
+            }
+
+            dishes.forEach((dish, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${dish.name}</span>
+                    <span class="badge">Выбор: ${dish.weight}</span>
+                    <div>
+                        <button onclick="showAddDish(${index})" title="Редактировать">&#9998;</button>
+                        <button onclick="deleteDish(${index})" class="danger" title="Удалить">&#10006;</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Удаление блюда
+        function deleteDish(index) {
+            if (confirm(`Удалить блюдо "${dishes[index].name}"?`)) {
+                dishes.splice(index, 1);
+                saveData();
+                renderDishes();
+            }
+        }
+
+        // Генерация меню
+        function showGenerateMenu() {
+            switchView('generate-menu');
+        }
+
+        function startGeneration() {
+            const countInput = document.getElementById('menu-count');
+            const count = parseInt(countInput.value);
+            
+            if (isNaN(count) || count < 1) {
+                showMessage('Ошибка!', 'Введите корректное количество блюд!', 'error');
+                return;
+            }
+
+            if (count > dishes.length) {
+                showMessage('Предупреждение!', `Максимум доступно: ${dishes.length} блюд`, 'warning');
+                countInput.value = dishes.length;
+                return;
+            }
+
+            // Сортировка по весу (от меньшего к большему)
+            const sorted = [...dishes].sort((a, b) => a.weight - b.weight);
+            selectedDishes = sorted.slice(0, count);
+
+            // Обновление веса выбранного блюда
+            selectedDishes.forEach(selected => {
+                const dish = dishes.find(d => d.id === selected.id);
+                if (dish) dish.weight++;
+            });
+
+            saveData();
+            renderSelectedDishes();
+            switchView('generate-menu');
+        }
+
+        // Рендеринг выбранных блюд
+        function renderSelectedDishes() {
+            const list = document.getElementById('selected-list');
+            list.innerHTML = '';
+            selectedDishes.forEach(dish => {
+                const li = document.createElement('li');
+                li.textContent = dish.name;
+                list.appendChild(li);
+            });
+        }
+
+        // Список покупок
+        function showShoppingList() {
+            const shoppingMap = new Map();
+
+            // Парсер количества
+            function parseAmount(amountStr) {
+                if (!amountStr || amountStr.trim() === '') return { quantity: 0, unit: '' };
+                
+                // Поддержка форматов: "2", "2шт", "2 шт", "1.5 кг"
+                const match = amountStr.match(/^([\d\.]+)(?:\s*(.*))?$/);
+                if (!match) return { quantity: 0, unit: '' };
+
+                return {
+                    quantity: parseFloat(match[1]),
+                    unit: (match[2] || '').trim()
+                };
+            }
+
+            // Группировка
+            if (!selectedDishes || !Array.isArray(selectedDishes)) {
+                showMessage('Ошибка!', 'Нет выбранных блюд для составления списка', 'error');
+                return;
+            }
+
+            selectedDishes.forEach(dish => {
+                if (!dish?.ingredients) return;
+
+                dish.ingredients.forEach(ing => {
+                    const key = ing.product.toLowerCase().trim();
+                    const parsed = parseAmount(ing.amount);
+
+                    if (!key) return; // Пропуск пустых продуктов
+                    
+                    if (!shoppingMap.has(key)) {
+                        shoppingMap.set(key, {
+                            product: ing.product,
+                            quantity: parsed.quantity || 0,
+                            unit: parsed.unit
+                        });
+                    } else {
+                        const existing = shoppingMap.get(key);
+                        existing.quantity += parsed.quantity || 0;
+                        // Если единицы измерения отличаются — сохраняем обе
+                        if (parsed.unit && parsed.unit !== existing.unit) {
+                            existing.unit = `${existing.unit} / ${parsed.unit}`;
+                        }
+                    }
+                });
+            });
+
+            // Рендер
+            const container = document.getElementById('shopping-output');
+            container.innerHTML = '';
+            
+            if (shoppingMap.size === 0) {
+                container.innerHTML = '<p class="center">Нет ингредиентов для выбранных блюд</p>';
+            } else {
+                Array.from(shoppingMap.values()).forEach(item => {
+                    if (item.quantity <= 0) return;
+                    
+                    const li = document.createElement('li');
+                    li.textContent = `${item.product}: ${item.quantity} ${item.unit || ''}`;
+                    container.appendChild(li);
+                });
+            }
+
+            switchView('shopping-list');
+        }
+
+        // Скачивание списка покупок
+        function downloadShoppingList() {
+            const items = document.querySelectorAll('#shopping-output li');
+            if (items.length === 0) {
+                showMessage('Ошибка!', 'Нет данных для скачивания', 'error');
+                return;
+            }
+
+            let content = 'Список покупок:\n\n';
+            items.forEach(item => content += item.textContent + '\n');
+
+            const blob = new Blob([content], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `shopping_list_${new Date().toISOString().slice(0,10)}.txt`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showMessage('Успех!', 'Файл успешно загружен', 'success');
+        }
+
+        // Копирование списка покупок
+        function copyShoppingList() {
+            const items = document.querySelectorAll('#shopping-output li');
+            if (items.length === 0) {
+                showMessage('Ошибка!', 'Нет данных для копирования', 'error');
+                return;
+            }
+
+            let content = '';
+            items.forEach(item => content += item.textContent + '\n');
+
+            navigator.clipboard.writeText(content)
+                .then(() => showMessage('Успех!', 'Список скопирован в буфер обмена', 'success'))
+                .catch(err => showMessage('Ошибка!', 'Не удалось скопировать текст', 'error'));
+        }
+
+        // Показ сообщений пользователю
+        function showMessage(title, message, type = 'info') {
+            alert(`${title}\n${message}`);
+        }
+
+        // Возврат к генерации
+        function backToGeneratedMenu() {
+            switchView('generate-menu');
+        }
+
+        // Инициализация
+        window.onload = () => {
+            document.getElementById('main-menu').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
