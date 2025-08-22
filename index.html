@@ -801,27 +801,26 @@
         }
         
         .category-group {
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 16px;
             margin-bottom: 12px;
-            padding-bottom: 6px;
+            overflow: hidden;
         }
         
         .category-group h3 {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-            font-size: 16px;
-            font-weight: 800;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
         }
 
         .shopping-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 4px;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--border);
             gap: 10px;
         }
@@ -1154,11 +1153,11 @@
         
         #toast-notification {
             position: fixed;
-            bottom: 90px;
+            top: 20px;
             left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--accent-secondary);
-            color: white;
+            transform: translate(-50%, -150%);
+            background-color: var(--text-primary);
+            color: var(--bg-secondary);
             padding: 14px 22px;
             border-radius: var(--radius-md);
             z-index: 2000;
@@ -1167,11 +1166,11 @@
             box-shadow: var(--shadow-lg);
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, bottom 0.3s;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
         }
 
         #toast-notification.show {
-            bottom: 100px;
+            transform: translate(-50%, 0);
             opacity: 1;
             visibility: visible;
         }
@@ -1427,11 +1426,11 @@
             </div>
             <div class="form-group">
                 <label class="form-label" for="product-name" data-i18n="product_name">Название продукта</label>
-                <input type="text" id="product-name" class="form-input" placeholder="Введите название продукта" data-i18n-placeholder="enter_product_name">
+                <input type="text" id="product-name" class="form-input" autocomplete="off" placeholder="Введите название продукта" data-i18n-placeholder="enter_product_name">
             </div>
             <div class="form-group">
                 <label class="form-label" for="product-category" data-i18n="category">Категория</label>
-                <input type="text" id="product-category" class="form-input" placeholder="Введите категорию (необязательно)" data-i18n-placeholder="enter_category_optional">
+                <input type="text" id="product-category" class="form-input" autocomplete="off" placeholder="Введите категорию (необязательно)" data-i18n-placeholder="enter_category_optional">
             </div>
             <button class="btn-base btn-primary save-button" onclick="saveProduct()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1450,7 +1449,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label" for="dish-name" data-i18n="dish_name">Название блюда</label>
-                <input type="text" id="dish-name" class="form-input" placeholder="Введите название блюда" data-i18n-placeholder="enter_dish_name">
+                <input type="text" id="dish-name" class="form-input" autocomplete="off" placeholder="Введите название блюда" data-i18n-placeholder="enter_dish_name">
             </div>
              <div class="form-group">
                 <label class="form-label" data-i18n="rating">Оценка</label>
@@ -1459,11 +1458,11 @@
             </div>
             <div class="form-group">
                 <label class="form-label" for="dish-category" data-i18n="category">Категория</label>
-                <input type="text" id="dish-category" class="form-input" placeholder="Введите категорию (необязательно)" data-i18n-placeholder="enter_category_optional">
+                <input type="text" id="dish-category" class="form-input" autocomplete="off" placeholder="Введите категорию (необязательно)" data-i18n-placeholder="enter_category_optional">
             </div>
             <div class="form-group">
                 <label class="form-label" for="dish-tags-input" data-i18n="tags">Теги</label>
-                <input type="text" id="dish-tags-input" class="form-input" placeholder="тег1, тег2, тег3" data-i18n-placeholder="tag1_tag2_tag3">
+                <input type="text" id="dish-tags-input" class="form-input" autocomplete="off" placeholder="тег1, тег2, тег3" data-i18n-placeholder="tag1_tag2_tag3">
             </div>
             <div class="form-group">
                 <label class="form-label" data-i18n="ingredients">Ингредиенты</label>
@@ -1571,25 +1570,28 @@
 
         const translations = {
             ru: {
-                products: "Продукты", dishes: "Блюда", shopping_list: "Список покупок", generated_menu: "Сгенерированное меню", add_product: "Добавить продукт", search_products: "Поиск продуктов...", add_dish: "Добавить блюдо", search_dishes: "Поиск блюд...", menu_settings: "Настройки меню", dishes_per_day: "Количество блюд в день", dishes_per_category: "Количество блюд в каждой категории", avoid_repeats: "Избегать повторений:", repeat_after: "Повторять через (дней)", select_categories_btn: "Выбрать категории", selected_categories: "Выбранные категории", categories_title: "Выбор категорий", categories_selected: "Выбрано: {count}", apply: "Применить", cancel: "Отмена", generate_menu: "Сгенерировать меню", app_settings: "Настройки приложения", export_data: "Экспортировать данные", import_data: "Импортировать данные", reset_counters: "Сбросить счётчики", reset_all_data: "Сбросить все данные", product_name: "Название продукта", enter_product_name: "Введите название продукта", category: "Категория", enter_category_optional: "Введите категорию (необязательно)", save_product: "Сохранить продукт", dish_name: "Название блюда", enter_dish_name: "Введите название блюда", tags: "Теги", tag1_tag2_tag3: "тег1, тег2, тег3", ingredients: "Ингредиенты", add_ingredient: "Добавить ингредиент", save_dish: "Сохранить блюдо", copy_to_clipboard: "Скопировать в буфер обмена", make_menu: "Создать меню", home: "Главная", no_products_found: "Продукты не найдены", no_dishes_found: "Блюда не найдены", no_categories_available: "Нет доступных категорий", used_times: "Использовано: {count} раз(а)", no_menu_generated: "Меню еще не сгенерировано", items: "Элементы", confirm_menu: "Подтвердить меню", menu_confirmed_status: "Статус: Меню зафиксировано", menu_draft_status: "Статус: Черновик (счётчики ещё не увеличены)", usage_policy: "Считать использование:", usage_on_confirm: "При подтверждении меню", usage_on_copy: "При копировании списка", usage_on_generate: "Сразу при генерации", menu_confirmed_success: "Меню зафиксировано. Счётчики обновлены.", already_confirmed: "Меню уже зафиксировано", menu_locked_cannot_replace: "Меню уже зафиксировано. Замена блюд недоступна.", replace_dish: "Заменить блюдо", no_replacement_available: "Нет доступных блюд для замены", not_enough_dishes: "Недостаточно блюд для генерации", select_all: "Выделить все", clear_all: "Убрать все выделения", rating: "Оценка", generator_weights_title: "Веса для генератора", usage_weight: "Приоритет частоты", rating_weight: "Приоритет оценки", recency_weight: "Приоритет давности", generator_criteria_title: "Критерии генерации", criterion_usage: "По частоте (реже = лучше)", criterion_rating: "По оценке (выше = лучше)", criterion_recency: "По давности (давнее = лучше)"
+                products: "Продукты", dishes: "Блюда", shopping_list: "Список покупок", generated_menu: "Сгенерированное меню", add_product: "Добавить продукт", search_products: "Поиск продуктов...", add_dish: "Добавить блюдо", search_dishes: "Поиск блюд...", menu_settings: "Настройки меню", dishes_per_day: "Количество блюд в день", dishes_per_category: "Количество блюд в каждой категории", avoid_repeats: "Избегать повторений:", repeat_after: "Повторять через (дней)", select_categories_btn: "Выбрать категории", selected_categories: "Выбранные категории", categories_title: "Выбор категорий", categories_selected: "Выбрано: {count}", apply: "Применить", cancel: "Отмена", generate_menu: "Сгенерировать меню", app_settings: "Настройки приложения", export_data: "Экспортировать данные", import_data: "Импортировать данные", reset_counters: "Сбросить счётчики", reset_all_data: "Сбросить все данные", product_name: "Название продукта", enter_product_name: "Введите название продукта", category: "Категория", enter_category_optional: "Введите категорию (необязательно)", save_product: "Сохранить продукт", dish_name: "Название блюда", enter_dish_name: "Введите название блюда", tags: "Теги", tag1_tag2_tag3: "тег1, тег2, тег3", ingredients: "Ингредиенты", add_ingredient: "Добавить ингредиент", save_dish: "Сохранить блюдо", copy_to_clipboard: "Скопировать в буфер обмена", make_menu: "Создать меню", home: "Главная", no_products_found: "Продукты не найдены", no_dishes_found: "Блюда не найдены", no_categories_available: "Нет доступных категорий", used_times: "Использовано: {count} раз(а)", no_menu_generated: "Меню еще не сгенерировано", items: "Элементы", confirm_menu: "Подтвердить меню", menu_confirmed_status: "Статус: Меню зафиксировано", menu_draft_status: "Статус: Черновик (счётчики ещё не увеличены)", usage_policy: "Считать использование:", usage_on_confirm: "При подтверждении меню", usage_on_copy: "При копировании списка", usage_on_generate: "Сразу при генерации", menu_confirmed_success: "Меню зафиксировано. Счётчики обновлены.", already_confirmed: "Меню уже зафиксировано", menu_locked_cannot_replace: "Меню уже зафиксировано. Замена блюд недоступна.", replace_dish: "Заменить блюдо", no_replacement_available: "Нет доступных блюд для замены", not_enough_dishes: "Недостаточно блюд для генерации", select_all: "Выделить все", clear_all: "Убрать все выделения", rating: "Оценка", generator_weights_title: "Веса для генератора", usage_weight: "Приоритет частоты", rating_weight: "Приоритет оценки", recency_weight: "Приоритет давности", generator_criteria_title: "Критерии генерации", criterion_usage: "По частоте (реже = лучше)", criterion_rating: "По оценке (выше = лучше)", criterion_recency: "По давности (давнее = лучше)", other: "Прочее"
             },
             en: {
-                products: "Products", dishes: "Dishes", shopping_list: "Shopping List", generated_menu: "Generated Menu", add_product: "Add Product", search_products: "Search products...", add_dish: "Add Dish", search_dishes: "Search dishes...", menu_settings: "Menu Settings", dishes_per_day: "Number of dishes per day", dishes_per_category: "Dishes per category", avoid_repeats: "Avoid repeats:", repeat_after: "Repeat after (days)", select_categories_btn: "Select categories", selected_categories: "Selected categories", categories_title: "Select categories", categories_selected: "Selected: {count}", apply: "Apply", cancel: "Cancel", generate_menu: "Generate Menu", app_settings: "App Settings", export_data: "Export Data", import_data: "Import Data", reset_counters: "Reset Counters", reset_all_data: "Reset All Data", product_name: "Product Name", enter_product_name: "Enter product name", category: "Category", enter_category_optional: "Enter category (optional)", save_product: "Save Product", dish_name: "Dish Name", enter_dish_name: "Enter dish name", tags: "Tags", tag1_tag2_tag3: "tag1, tag2, tag3", ingredients: "Ingredients", add_ingredient: "Add Ingredient", save_dish: "Save Dish", copy_to_clipboard: "Copy to Clipboard", make_menu: "Make Menu", home: "Home", no_products_found: "No products found", no_dishes_found: "No dishes found", no_categories_available: "No categories available", used_times: "Used: {count} time(s)", no_menu_generated: "No menu generated yet", items: "Items", confirm_menu: "Confirm Menu", menu_confirmed_status: "Status: Confirmed", menu_draft_status: "Status: Draft (counters not updated yet)", usage_policy: "Count usage:", usage_on_confirm: "On confirm", usage_on_copy: "On copy", usage_on_generate: "On generate", menu_confirmed_success: "Menu confirmed. Counters updated.", already_confirmed: "Menu already confirmed", menu_locked_cannot_replace: "Menu is confirmed. Replacement is not allowed.", replace_dish: "Replace dish", no_replacement_available: "No available dishes for replacement", not_enough_dishes: "Not enough dishes to generate", select_all: "Select all", clear_all: "Clear all", rating: "Rating", generator_weights_title: "Generator Weights", usage_weight: "Usage Priority", rating_weight: "Rating Priority", recency_weight: "Recency Priority", generator_criteria_title: "Generation Criteria", criterion_usage: "By frequency (less often = better)", criterion_rating: "By rating (higher = better)", criterion_recency: "By recency (older = better)"
+                products: "Products", dishes: "Dishes", shopping_list: "Shopping List", generated_menu: "Generated Menu", add_product: "Add Product", search_products: "Search products...", add_dish: "Add Dish", search_dishes: "Search dishes...", menu_settings: "Menu Settings", dishes_per_day: "Number of dishes per day", dishes_per_category: "Dishes per category", avoid_repeats: "Avoid repeats:", repeat_after: "Repeat after (days)", select_categories_btn: "Select categories", selected_categories: "Selected categories", categories_title: "Select categories", categories_selected: "Selected: {count}", apply: "Apply", cancel: "Cancel", generate_menu: "Generate Menu", app_settings: "App Settings", export_data: "Export Data", import_data: "Import Data", reset_counters: "Reset Counters", reset_all_data: "Reset All Data", product_name: "Product Name", enter_product_name: "Enter product name", category: "Category", enter_category_optional: "Enter category (optional)", save_product: "Save Product", dish_name: "Dish Name", enter_dish_name: "Enter dish name", tags: "Tags", tag1_tag2_tag3: "tag1, tag2, tag3", ingredients: "Ingredients", add_ingredient: "Add Ingredient", save_dish: "Save Dish", copy_to_clipboard: "Copy to Clipboard", make_menu: "Make Menu", home: "Home", no_products_found: "No products found", no_dishes_found: "No dishes found", no_categories_available: "No categories available", used_times: "Used: {count} time(s)", no_menu_generated: "No menu generated yet", items: "Items", confirm_menu: "Confirm Menu", menu_confirmed_status: "Status: Confirmed", menu_draft_status: "Status: Draft (counters not updated yet)", usage_policy: "Count usage:", usage_on_confirm: "On confirm", usage_on_copy: "On copy", usage_on_generate: "On generate", menu_confirmed_success: "Menu confirmed. Counters updated.", already_confirmed: "Menu already confirmed", menu_locked_cannot_replace: "Menu is confirmed. Replacement is not allowed.", replace_dish: "Replace dish", no_replacement_available: "No available dishes for replacement", not_enough_dishes: "Not enough dishes to generate", select_all: "Select all", clear_all: "Clear all", rating: "Rating", generator_weights_title: "Generator Weights", usage_weight: "Usage Priority", rating_weight: "Rating Priority", recency_weight: "Recency Priority", generator_criteria_title: "Generation Criteria", criterion_usage: "By frequency (less often = better)", criterion_rating: "By rating (higher = better)", criterion_recency: "By recency (older = better)", other: "Other"
             }
         };
 
         let toastTimeout;
+        const toast = document.getElementById('toast-notification');
+        const hideToast = () => {
+            if (toast) toast.classList.remove('show');
+            document.removeEventListener('click', hideToast);
+        };
         function showToast(message) {
-            const toast = document.getElementById('toast-notification');
             if (!toast) return;
 
             toast.textContent = message;
             toast.classList.add('show');
 
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            toastTimeout = setTimeout(hideToast, 3000);
+            setTimeout(() => document.addEventListener('click', hideToast), 50);
         }
 
         function toggleLanguage() {
@@ -1937,7 +1939,7 @@
             row.className = 'ingredient-row';
             row.innerHTML = `
                 <div class="ingredient-name">
-                    <input type="text" class="form-input ingredient-product" placeholder="${translations[currentLanguage].enter_product_name}" list="product-suggestions">
+                    <input type="text" class="form-input ingredient-product" autocomplete="off" placeholder="${translations[currentLanguage].enter_product_name}" list="product-suggestions">
                 </div>
                 <div class="ingredient-actions">
                     <div class="ingredient-quantity">
@@ -2051,7 +2053,7 @@
             row.className = 'ingredient-row';
             row.innerHTML = `
                 <div class="ingredient-name">
-                    <input type="text" class="form-input ingredient-product" placeholder="${translations[currentLanguage].enter_product_name}" list="product-suggestions" value="${product}">
+                    <input type="text" class="form-input ingredient-product" autocomplete="off" placeholder="${translations[currentLanguage].enter_product_name}" list="product-suggestions" value="${product}">
                 </div>
                 <div class="ingredient-actions">
                     <div class="ingredient-quantity">
@@ -2081,7 +2083,7 @@
                 (!activeFilter.products || p.category === activeFilter.products)
              );
             const categorized = filtered.reduce((acc, p) => {
-                const cat = p.category || (currentLanguage === 'ru' ? 'Без категории' : 'Uncategorized');
+                const cat = p.category || translations[currentLanguage].other || 'Other';
                 if (!acc[cat]) acc[cat] = [];
                 acc[cat].push(p);
                 return acc;
@@ -2131,7 +2133,7 @@
                 (activeFilter.dishes.length === 0 || d.tags?.some(tag => activeFilter.dishes.includes(tag)))
             );
             const categorized = filtered.reduce((acc, d) => {
-                const cat = d.category || (currentLanguage === 'ru' ? 'Без категории' : 'Uncategorized');
+                const cat = d.category || translations[currentLanguage].other || 'Other';
                 if (!acc[cat]) acc[cat] = [];
                 acc[cat].push(d);
                 return acc;
@@ -2347,9 +2349,9 @@
                 .map(item => item.dish);
         }
 
-        function isEligibleDish(dish, usedIdsSet) {
-            if (!dish || (usedIdsSet && usedIdsSet.has(dish.id))) return false;
-            if (menuSettings.repeatDays > 0 && dish.lastUsedAt) {
+        function isEligibleDish(dish, usedIdsSet, checkRepeatDays = true) {
+            if (!dish || usedIdsSet.has(dish.id)) return false;
+            if (checkRepeatDays && menuSettings.repeatDays > 0 && dish.lastUsedAt) {
                 if (Date.now() - dish.lastUsedAt < menuSettings.repeatDays * 86400000) {
                     return false;
                 }
@@ -2372,52 +2374,45 @@
                 const msg = currentLanguage === 'ru' 
                     ? 'Все критерии генерации отключены. Меню будет сгенерировано случайным образом. Продолжить?'
                     : 'All generation criteria are disabled. The menu will be generated randomly. Continue?';
-                if (!confirm(msg)) {
-                    return;
-                }
+                if (!confirm(msg)) return;
             }
 
             const cats = selectedCategories.length ? [...selectedCategories].sort() : [];
             const perCategoryCount = cats.length ? menuSettings.count : null;
             const totalTarget = cats.length ? perCategoryCount * cats.length : menuSettings.count;
+            
+            const getAvailableDishes = () => dishes.filter(d => cats.length === 0 || cats.includes(d.category));
+            
+            if (getAvailableDishes().length < totalTarget) {
+                showToast(translations[currentLanguage].not_enough_dishes);
+                return;
+            }
+            
             const picks = [];
             const usedIds = new Set();
+            
+            const selectDishes = (dishPool, count, checkRepeats) => {
+                let rankedPool = getRankedDishes(dishPool);
+                for (const dish of rankedPool) {
+                    if (picks.length < count && isEligibleDish(dish, usedIds, checkRepeats)) {
+                        picks.push(dish);
+                        usedIds.add(dish.id);
+                    }
+                }
+            };
             
             if (cats.length) {
                 cats.forEach(cat => {
                     let catPool = dishes.filter(d => d.category === cat);
-                    let rankedCatPool = getRankedDishes(catPool);
-                    
-                    let eligible = rankedCatPool.filter(d => isEligibleDish(d, usedIds));
-                    let fallback = rankedCatPool.filter(d => !usedIds.has(d.id));
-
-                    for (let i = 0; i < perCategoryCount; i++) {
-                        if (eligible.length > 0) {
-                            const pick = eligible.shift();
-                            picks.push(pick);
-                            usedIds.add(pick.id);
-                        } else if (fallback.length > 0) {
-                            const pick = fallback.shift();
-                            picks.push(pick);
-                            usedIds.add(pick.id);
-                        }
+                    selectDishes(catPool, picks.length + perCategoryCount, true);
+                    if (picks.filter(p => p.category === cat).length < perCategoryCount) {
+                        selectDishes(catPool, picks.length + (perCategoryCount - picks.filter(p => p.category === cat).length), false);
                     }
                 });
             } else {
-                let allRanked = getRankedDishes([...dishes]);
-                let eligible = allRanked.filter(d => isEligibleDish(d, usedIds));
-                let fallback = allRanked.filter(d => !usedIds.has(d.id));
-
-                while(picks.length < totalTarget && (eligible.length > 0 || fallback.length > 0)) {
-                    if (eligible.length > 0) {
-                        const pick = eligible.shift();
-                        picks.push(pick);
-                        usedIds.add(pick.id);
-                    } else if (fallback.length > 0) {
-                        const pick = fallback.shift();
-                        picks.push(pick);
-                        usedIds.add(pick.id);
-                    }
+                selectDishes([...dishes], totalTarget, true);
+                if (picks.length < totalTarget) {
+                    selectDishes([...dishes], totalTarget, false);
                 }
             }
 
@@ -2501,7 +2496,7 @@
             
             const groupedByCategory = Object.values(productQuantities).reduce((acc, item) => {
                 const p = productIndex[item.product.toLowerCase()];
-                const cat = p?.category || (currentLanguage === 'ru' ? 'Без категории' : 'Uncategorized');
+                const cat = p?.category || translations[currentLanguage].other || 'Other';
                 if (!acc[cat]) acc[cat] = [];
                 acc[cat].push({product: item.product, quantity: item.quantity});
                 return acc;
@@ -2516,14 +2511,14 @@
                 categories.forEach(cat => {
                     const wrap = document.createElement('div');
                     wrap.className = 'category-group';
-                    wrap.innerHTML = `<h3>${cat}</h3>` +
-                    groupedByCategory[cat]
+                    let itemsHTML = groupedByCategory[cat]
                         .sort((a, b) => a.product.localeCompare(b.product))
                         .map(item => `
                         <div class="shopping-item">
                             <div class="shopping-product">${item.product}</div>
                             <div class="shopping-quantity">${item.quantity}</div>
                         </div>`).join('');
+                    wrap.innerHTML = `<h3>${cat}</h3><div>${itemsHTML}</div>`;
                     shoppingItems.appendChild(wrap);
                 });
             }
@@ -2565,7 +2560,7 @@
             }
             
             const byCat = generatedMenu.reduce((acc, d) => {
-                const cat = d.category || (currentLanguage === 'ru' ? 'Без категории' : 'Uncategorized');
+                const cat = d.category || translations[currentLanguage].other || 'Other';
                 if (!acc[cat]) acc[cat] = [];
                 acc[cat].push(d);
                 return acc;
