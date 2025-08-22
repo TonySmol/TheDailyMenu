@@ -431,7 +431,6 @@
             gap: 8px;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -543,6 +542,11 @@
             color: var(--text-primary);
             font-size: 14px;
         }
+        
+        .form-field.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
 
         .form-input {
             width: 100%;
@@ -579,7 +583,6 @@
             border-color: var(--accent-primary);
         }
 
-        /* Settings layout */
         .settings-section {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -611,6 +614,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            transition: opacity 0.2s ease;
         }
 
         .inline-actions {
@@ -702,8 +706,10 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 110;
-            padding-left: 36px;
-            padding-right: 36px;
+            padding-left: 50px;
+            padding-right: 50px;
+            min-width: 220px;
+            white-space: nowrap;
         }
 
         .make-menu-button:hover {
@@ -777,8 +783,7 @@
         .shopping-list-modal {
             max-width: 520px;
         }
-
-        /* ИСПРАВЛЕНО: Улучшены стили для списка покупок */
+        
         .category-group {
             background: var(--bg-tertiary);
             border: 1px solid var(--border);
@@ -834,7 +839,7 @@
 
         .ingredient-row {
             display: flex;
-            flex-wrap: wrap; /* Разрешаем перенос для мобильных */
+            flex-wrap: wrap; 
             gap: 10px;
             margin-bottom: 10px;
             align-items: flex-start;
@@ -851,7 +856,7 @@
         }
 
         .ingredient-name {
-            flex: 1 1 100%; /* Название занимает всю ширину и переносит остальное вниз */
+            flex: 1 1 100%;
         }
         
         .ingredient-actions {
@@ -862,7 +867,7 @@
         }
 
         .ingredient-quantity {
-            flex-grow: 1; /* Поле количества растягивается */
+            flex-grow: 1;
         }
 
         .ingredient-row .form-input {
@@ -1050,7 +1055,6 @@
             text-align: center;
         }
         
-        /* Star Rating Styles */
         .star-rating {
             display: flex;
             gap: 4px;
@@ -1258,14 +1262,8 @@
                     <input type="number" id="menu-count" class="number-input" value="5" min="1" max="50">
                 </div>
                 <div class="form-field">
-                    <label class="form-label" data-i18n="avoid_repeats">Избегать повторений:</label>
-                    <div class="toggle-field">
-                        <input type="checkbox" id="no-repeat" checked>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label class="form-label" data-i18n="repeat_after">Повторять через (дней):</label>
-                    <input type="number" id="repeat-days" class="number-input" value="7" min="1" max="365">
+                    <label class="form-label" data-i18n="repeat_after">Повторять через (дней)</label>
+                    <input type="number" id="repeat-days" class="number-input" value="7" min="0" max="365">
                 </div>
             </div>
         </div>
@@ -1336,21 +1334,21 @@
         <div class="settings-section">
             <h3 data-i18n="generator_weights_title">Веса для генератора</h3>
             <div class="settings-grid-vertical">
-                <div class="form-field">
+                <div class="form-field" id="usage-weight-field">
                     <label class="form-label" for="usage-weight" data-i18n="usage_weight">Приоритет частоты</label>
                     <div class="range-slider-group">
                         <input type="range" id="usage-weight" min="0" max="10" step="1" value="5">
                         <span class="value-display" id="usage-weight-value">5</span>
                     </div>
                 </div>
-                <div class="form-field">
+                <div class="form-field" id="rating-weight-field">
                     <label class="form-label" for="rating-weight" data-i18n="rating_weight">Приоритет оценки</label>
                      <div class="range-slider-group">
                         <input type="range" id="rating-weight" min="0" max="10" step="1" value="5">
                          <span class="value-display" id="rating-weight-value">5</span>
                     </div>
                 </div>
-                 <div class="form-field">
+                 <div class="form-field" id="recency-weight-field">
                     <label class="form-label" for="recency-weight" data-i18n="recency_weight">Приоритет давности</label>
                      <div class="range-slider-group">
                         <input type="range" id="recency-weight" min="0" max="10" step="1" value="5">
@@ -1544,7 +1542,6 @@
         </button>
     </div>
     <script>
-        // Глобальные переменные
         let products = [];
         let dishes = [];
         let editingProductId = null;
@@ -1561,7 +1558,6 @@
         };
         let menuSettings = {
             count: 5,
-            noRepeat: true,
             repeatDays: 7,
             usagePolicy: 'confirm',
             generatorWeights: { usage: 5, rating: 5, recency: 5 },
@@ -1569,13 +1565,12 @@
         };
         let currentLanguage = 'ru';
 
-        // Переводы
         const translations = {
             ru: {
-                products: "Продукты", dishes: "Блюда", shopping_list: "Список покупок", generated_menu: "Сгенерированное меню", add_product: "Добавить продукт", search_products: "Поиск продуктов...", add_dish: "Добавить блюдо", search_dishes: "Поиск блюд...", menu_settings: "Настройки меню", dishes_per_day: "Количество блюд в день", dishes_per_category: "Количество блюд в каждой категории", avoid_repeats: "Избегать повторений:", repeat_after: "Повторять через (дней):", select_categories_btn: "Выбрать категории", selected_categories: "Выбранные категории", categories_title: "Выбор категорий", categories_selected: "Выбрано: {count}", apply: "Применить", cancel: "Отмена", generate_menu: "Сгенерировать меню", app_settings: "Настройки приложения", export_data: "Экспортировать данные", import_data: "Импортировать данные", reset_counters: "Сбросить счётчики", reset_all_data: "Сбросить все данные", product_name: "Название продукта", enter_product_name: "Введите название продукта", category: "Категория", enter_category_optional: "Введите категорию (необязательно)", save_product: "Сохранить продукт", dish_name: "Название блюда", enter_dish_name: "Введите название блюда", tags: "Теги", tag1_tag2_tag3: "тег1, тег2, тег3", ingredients: "Ингредиенты", add_ingredient: "Добавить ингредиент", save_dish: "Сохранить блюдо", copy_to_clipboard: "Скопировать в буфер обмена", make_menu: "Создать меню", home: "Главная", no_products_found: "Продукты не найдены", no_dishes_found: "Блюда не найдены", no_categories_available: "Нет доступных категорий", used_times: "Использовано: {count} раз(а)", no_menu_generated: "Меню еще не сгенерировано", items: "Элементы", confirm_menu: "Подтвердить меню", menu_confirmed_status: "Статус: Меню зафиксировано", menu_draft_status: "Статус: Черновик (счётчики ещё не увеличены)", usage_policy: "Считать использование:", usage_on_confirm: "При подтверждении меню", usage_on_copy: "При копировании списка", usage_on_generate: "Сразу при генерации", menu_confirmed_success: "Меню зафиксировано. Счётчики обновлены.", already_confirmed: "Меню уже зафиксировано", menu_locked_cannot_replace: "Меню уже зафиксировано. Замена блюд недоступна.", replace_dish: "Заменить блюдо", no_replacement_available: "Нет доступных блюд для замены", not_enough_dishes: "Недостаточно блюд для генерации", select_all: "Выделить все", clear_all: "Убрать все выделения", rating: "Оценка", generator_weights_title: "Веса для генератора", usage_weight: "Приоритет частоты", rating_weight: "Приоритет оценки", recency_weight: "Приоритет давности", generator_criteria_title: "Критерии генерации", criterion_usage: "По частоте (реже = лучше)", criterion_rating: "По оценке (выше = лучше)", criterion_recency: "По давности (давнее = лучше)"
+                products: "Продукты", dishes: "Блюда", shopping_list: "Список покупок", generated_menu: "Сгенерированное меню", add_product: "Добавить продукт", search_products: "Поиск продуктов...", add_dish: "Добавить блюдо", search_dishes: "Поиск блюд...", menu_settings: "Настройки меню", dishes_per_day: "Количество блюд в день", dishes_per_category: "Количество блюд в каждой категории", avoid_repeats: "Избегать повторений:", repeat_after: "Повторять через (дней)", select_categories_btn: "Выбрать категории", selected_categories: "Выбранные категории", categories_title: "Выбор категорий", categories_selected: "Выбрано: {count}", apply: "Применить", cancel: "Отмена", generate_menu: "Сгенерировать меню", app_settings: "Настройки приложения", export_data: "Экспортировать данные", import_data: "Импортировать данные", reset_counters: "Сбросить счётчики", reset_all_data: "Сбросить все данные", product_name: "Название продукта", enter_product_name: "Введите название продукта", category: "Категория", enter_category_optional: "Введите категорию (необязательно)", save_product: "Сохранить продукт", dish_name: "Название блюда", enter_dish_name: "Введите название блюда", tags: "Теги", tag1_tag2_tag3: "тег1, тег2, тег3", ingredients: "Ингредиенты", add_ingredient: "Добавить ингредиент", save_dish: "Сохранить блюдо", copy_to_clipboard: "Скопировать в буфер обмена", make_menu: "Создать меню", home: "Главная", no_products_found: "Продукты не найдены", no_dishes_found: "Блюда не найдены", no_categories_available: "Нет доступных категорий", used_times: "Использовано: {count} раз(а)", no_menu_generated: "Меню еще не сгенерировано", items: "Элементы", confirm_menu: "Подтвердить меню", menu_confirmed_status: "Статус: Меню зафиксировано", menu_draft_status: "Статус: Черновик (счётчики ещё не увеличены)", usage_policy: "Считать использование:", usage_on_confirm: "При подтверждении меню", usage_on_copy: "При копировании списка", usage_on_generate: "Сразу при генерации", menu_confirmed_success: "Меню зафиксировано. Счётчики обновлены.", already_confirmed: "Меню уже зафиксировано", menu_locked_cannot_replace: "Меню уже зафиксировано. Замена блюд недоступна.", replace_dish: "Заменить блюдо", no_replacement_available: "Нет доступных блюд для замены", not_enough_dishes: "Недостаточно блюд для генерации", select_all: "Выделить все", clear_all: "Убрать все выделения", rating: "Оценка", generator_weights_title: "Веса для генератора", usage_weight: "Приоритет частоты", rating_weight: "Приоритет оценки", recency_weight: "Приоритет давности", generator_criteria_title: "Критерии генерации", criterion_usage: "По частоте (реже = лучше)", criterion_rating: "По оценке (выше = лучше)", criterion_recency: "По давности (давнее = лучше)"
             },
             en: {
-                products: "Products", dishes: "Dishes", shopping_list: "Shopping List", generated_menu: "Generated Menu", add_product: "Add Product", search_products: "Search products...", add_dish: "Add Dish", search_dishes: "Search dishes...", menu_settings: "Menu Settings", dishes_per_day: "Number of dishes per day", dishes_per_category: "Dishes per category", avoid_repeats: "Avoid repeats:", repeat_after: "Repeat after (days):", select_categories_btn: "Select categories", selected_categories: "Selected categories", categories_title: "Select categories", categories_selected: "Selected: {count}", apply: "Apply", cancel: "Cancel", generate_menu: "Generate Menu", app_settings: "App Settings", export_data: "Export Data", import_data: "Import Data", reset_counters: "Reset Counters", reset_all_data: "Reset All Data", product_name: "Product Name", enter_product_name: "Enter product name", category: "Category", enter_category_optional: "Enter category (optional)", save_product: "Save Product", dish_name: "Dish Name", enter_dish_name: "Enter dish name", tags: "Tags", tag1_tag2_tag3: "tag1, tag2, tag3", ingredients: "Ingredients", add_ingredient: "Add Ingredient", save_dish: "Save Dish", copy_to_clipboard: "Copy to Clipboard", make_menu: "Make Menu", home: "Home", no_products_found: "No products found", no_dishes_found: "No dishes found", no_categories_available: "No categories available", used_times: "Used: {count} time(s)", no_menu_generated: "No menu generated yet", items: "Items", confirm_menu: "Confirm Menu", menu_confirmed_status: "Status: Confirmed", menu_draft_status: "Status: Draft (counters not updated yet)", usage_policy: "Count usage:", usage_on_confirm: "On confirm", usage_on_copy: "On copy", usage_on_generate: "On generate", menu_confirmed_success: "Menu confirmed. Counters updated.", already_confirmed: "Menu already confirmed", menu_locked_cannot_replace: "Menu is confirmed. Replacement is not allowed.", replace_dish: "Replace dish", no_replacement_available: "No available dishes for replacement", not_enough_dishes: "Not enough dishes to generate", select_all: "Select all", clear_all: "Clear all", rating: "Rating", generator_weights_title: "Generator Weights", usage_weight: "Usage Priority", rating_weight: "Rating Priority", recency_weight: "Recency Priority", generator_criteria_title: "Generation Criteria", criterion_usage: "By frequency (less often = better)", criterion_rating: "By rating (higher = better)", criterion_recency: "By recency (older = better)"
+                products: "Products", dishes: "Dishes", shopping_list: "Shopping List", generated_menu: "Generated Menu", add_product: "Add Product", search_products: "Search products...", add_dish: "Add Dish", search_dishes: "Search dishes...", menu_settings: "Menu Settings", dishes_per_day: "Number of dishes per day", dishes_per_category: "Dishes per category", avoid_repeats: "Avoid repeats:", repeat_after: "Repeat after (days)", select_categories_btn: "Select categories", selected_categories: "Selected categories", categories_title: "Select categories", categories_selected: "Selected: {count}", apply: "Apply", cancel: "Cancel", generate_menu: "Generate Menu", app_settings: "App Settings", export_data: "Export Data", import_data: "Import Data", reset_counters: "Reset Counters", reset_all_data: "Reset All Data", product_name: "Product Name", enter_product_name: "Enter product name", category: "Category", enter_category_optional: "Enter category (optional)", save_product: "Save Product", dish_name: "Dish Name", enter_dish_name: "Enter dish name", tags: "Tags", tag1_tag2_tag3: "tag1, tag2, tag3", ingredients: "Ingredients", add_ingredient: "Add Ingredient", save_dish: "Save Dish", copy_to_clipboard: "Copy to Clipboard", make_menu: "Make Menu", home: "Home", no_products_found: "No products found", no_dishes_found: "No dishes found", no_categories_available: "No categories available", used_times: "Used: {count} time(s)", no_menu_generated: "No menu generated yet", items: "Items", confirm_menu: "Confirm Menu", menu_confirmed_status: "Status: Confirmed", menu_draft_status: "Status: Draft (counters not updated yet)", usage_policy: "Count usage:", usage_on_confirm: "On confirm", usage_on_copy: "On copy", usage_on_generate: "On generate", menu_confirmed_success: "Menu confirmed. Counters updated.", already_confirmed: "Menu already confirmed", menu_locked_cannot_replace: "Menu is confirmed. Replacement is not allowed.", replace_dish: "Replace dish", no_replacement_available: "No available dishes for replacement", not_enough_dishes: "Not enough dishes to generate", select_all: "Select all", clear_all: "Clear all", rating: "Rating", generator_weights_title: "Generator Weights", usage_weight: "Usage Priority", rating_weight: "Rating Priority", recency_weight: "Recency Priority", generator_criteria_title: "Generation Criteria", criterion_usage: "By frequency (less often = better)", criterion_rating: "By rating (higher = better)", criterion_recency: "By recency (older = better)"
             }
         };
 
@@ -1683,7 +1678,6 @@
             dl.innerHTML = names.map(n => `<option value="${n}"></option>`).join('');
         }
 
-        // Инициализация
         function initStorage() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') document.body.classList.add('dark-theme');
@@ -1732,7 +1726,6 @@
             }
 
             document.getElementById('menu-count').value = menuSettings.count;
-            document.getElementById('no-repeat').checked = menuSettings.noRepeat;
             document.getElementById('repeat-days').value = menuSettings.repeatDays;
             document.getElementById('usage-policy').value = menuSettings.usagePolicy;
 
@@ -1746,6 +1739,8 @@
             document.getElementById('use-usage-criterion').checked = menuSettings.generatorCriteria.usage;
             document.getElementById('use-rating-criterion').checked = menuSettings.generatorCriteria.rating;
             document.getElementById('use-recency-criterion').checked = menuSettings.generatorCriteria.recency;
+            
+            syncGeneratorWeightControls();
 
             refreshProductSuggestionsDatalist();
             renderProductsList();
@@ -1800,15 +1795,8 @@
                             menuSession = { generatedAt: null, confirmed: false };
                             saveToStorage();
                             saveMenuState();
-                            refreshProductSuggestionsDatalist();
-                            renderProductsList();
-                            renderDishesList();
-                            renderTags();
-                            updateDashboardStats();
+                            initStorage();
                             alert(currentLanguage === 'ru' ? 'Данные импортированы успешно' : 'Data imported successfully');
-                            updateUIWithTranslations();
-                            displayGeneratedMenu();
-                            updateFAB();
                         }
                     } else {
                         alert(currentLanguage === 'ru' ? 'Неверный формат файла' : 'Invalid file format');
@@ -1832,7 +1820,6 @@
             menuSession = { generatedAt: null, confirmed: false };
             menuSettings = {
                 count: 5,
-                noRepeat: true,
                 repeatDays: 7,
                 usagePolicy: 'confirm',
                 generatorWeights: { usage: 5, rating: 5, recency: 5 },
@@ -1965,7 +1952,8 @@
                     products[i].category = category;
                 }
             } else {
-                products.push({ id: Date.now(), name, category });
+                const newId = Date.now() + Math.random();
+                products.push({ id: newId, name, category });
             }
             saveToStorage();
             refreshProductSuggestionsDatalist();
@@ -1980,7 +1968,6 @@
             const category = document.getElementById('dish-category').value.trim();
             const tags = document.getElementById('dish-tags-input').value;
             const rows = document.querySelectorAll('#ingredients-list .ingredient-row');
-            // ИСПРАВЛЕНО: Сохраняем количество как число
             const ingredients = Array.from(rows).map(row => ({
                 product: (row.querySelector('.ingredient-product')?.value || '').trim(),
                 quantity: parseFloat(row.querySelector('.ingredient-quantity-input')?.value) || 0
@@ -1988,7 +1975,8 @@
 
             ingredients.forEach(ing => {
                 if (!products.some(p => p.name.toLowerCase() === ing.product.toLowerCase())) {
-                    products.push({ id: Date.now() + Math.random(), name: ing.product, category: 'other' });
+                    const newId = Date.now() + Math.random();
+                    products.push({ id: newId, name: ing.product, category: 'other' });
                 }
             });
 
@@ -2000,7 +1988,8 @@
                     dishes[i] = { ...dishes[i], ...dishData };
                 }
             } else {
-                dishes.push({ id: Date.now(), ...dishData, usageCount: 0, lastUsedAt: null });
+                const newId = Date.now() + Math.random();
+                dishes.push({ id: newId, ...dishData, usageCount: 0, lastUsedAt: null });
             }
             saveToStorage();
             refreshProductSuggestionsDatalist();
@@ -2339,17 +2328,17 @@
 
         function isEligibleDish(dish, usedIdsSet) {
             if (!dish || (usedIdsSet && usedIdsSet.has(dish.id))) return false;
-            if (menuSettings.noRepeat && dish.lastUsedAt) {
-                const days = menuSettings.repeatDays || 7;
-                if (Date.now() - dish.lastUsedAt < days * 86400000) return false;
+            if (menuSettings.repeatDays > 0 && dish.lastUsedAt) {
+                if (Date.now() - dish.lastUsedAt < menuSettings.repeatDays * 86400000) {
+                    return false;
+                }
             }
             return true;
         }
 
         function generateMenu() {
             menuSettings.count = parseInt(document.getElementById('menu-count').value) || 5;
-            menuSettings.noRepeat = document.getElementById('no-repeat').checked;
-            menuSettings.repeatDays = parseInt(document.getElementById('repeat-days').value) || 7;
+            menuSettings.repeatDays = parseInt(document.getElementById('repeat-days').value) || 0;
             menuSettings.usagePolicy = document.getElementById('usage-policy').value || 'confirm';
             menuSettings.generatorCriteria = {
                 usage: document.getElementById('use-usage-criterion').checked,
@@ -2357,6 +2346,15 @@
                 recency: document.getElementById('use-recency-criterion').checked
             };
             saveToStorage();
+
+            if (!menuSettings.generatorCriteria.usage && !menuSettings.generatorCriteria.rating && !menuSettings.generatorCriteria.recency) {
+                const msg = currentLanguage === 'ru' 
+                    ? 'Все критерии генерации отключены. Меню будет сгенерировано случайным образом. Продолжить?'
+                    : 'All generation criteria are disabled. The menu will be generated randomly. Continue?';
+                if (!confirm(msg)) {
+                    return;
+                }
+            }
 
             const cats = selectedCategories.length ? [...selectedCategories].sort() : [];
             const perCategoryCount = cats.length ? menuSettings.count : null;
@@ -2465,7 +2463,6 @@
             const shoppingItems = document.getElementById('shopping-items');
             const allIngredients = generatedMenu.flatMap(d => d.ingredients || []);
             
-            // ИСПРАВЛЕНО: Логика агрегации для суммирования количества
             const productQuantities = allIngredients.reduce((acc, ing) => {
                 const name = (ing.product || '').trim();
                 const quantity = parseFloat(ing.quantity) || 0;
@@ -2581,8 +2578,26 @@
             updateDynamicTexts();
         }
 
+        function syncGeneratorWeightControls() {
+            const criteria = {
+                usage: document.getElementById('use-usage-criterion').checked,
+                rating: document.getElementById('use-rating-criterion').checked,
+                recency: document.getElementById('use-recency-criterion').checked
+            };
+
+            for (const key in criteria) {
+                const field = document.getElementById(`${key}-weight-field`);
+                if (field) {
+                    field.classList.toggle('disabled', !criteria[key]);
+                    const slider = field.querySelector('input[type="range"]');
+                    if(slider) slider.disabled = !criteria[key];
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             initStorage();
+            
             document.getElementById('settings-button').addEventListener('click', () => showScreen('settings-screen'));
             document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', function() { hideModal(this.closest('.modal').id); }));
             document.getElementById('product-search').addEventListener('input', filterProducts);
@@ -2604,6 +2619,11 @@
                     menuSettings.generatorWeights[type] = parseInt(slider.value);
                     saveToStorage();
                 });
+                
+                const criterionCheckbox = document.getElementById(`use-${type}-criterion`);
+                if(criterionCheckbox) {
+                    criterionCheckbox.addEventListener('change', syncGeneratorWeightControls);
+                }
             });
 
             updateFAB();
